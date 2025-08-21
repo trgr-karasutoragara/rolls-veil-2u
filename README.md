@@ -12,6 +12,9 @@ A prototype tool for re-evaluating knowledge claims under a “pseudo veil of ig
 1. [ZIPファイル](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/Authority-Rewiring-Tool-Plus.zip)をダウンロードする
 2. ZIPファイルをあなたのパソコンなどで回答する
 3. HTMLファイルが入っているのでダブルクリックしてブラウザで使います
+4. [JSON](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.json)をインポートしたり
+5. [.md](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.md
+)と[JSON](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.json)をエクスポートすることも出来ます
 
 <br>
 
@@ -52,7 +55,9 @@ AIが言っているからと鵜呑みにすることだけでなく、権威の
 
 # なぜ母語なの？
 
-哲学や論理学を扱うから、母語で制作しました。
+哲学や論理学を扱うから、まず母語で制作しました。
+
+英語版などは未定です。MITライセンスなので翻訳や改造も歓迎です。
 
 <br>
 
