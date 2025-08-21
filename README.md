@@ -10,7 +10,7 @@ A prototype tool for re-evaluating knowledge claims under a “pseudo veil of ig
 
 # クイックスタート
 1. [ZIPファイル](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/Authority-Rewiring-Tool-Plus.zip)をダウンロードする
-2. ZIPファイルをあなたのパソコンなどで回答する
+2. ZIPファイルをあなたのパソコンなどで解凍する
 3. HTMLファイルが入っているのでダブルクリックしてブラウザで使います
 4. [JSON](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.json)をインポートしたり
 5. [.md](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.md
