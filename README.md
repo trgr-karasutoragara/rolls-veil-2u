@@ -53,6 +53,11 @@ AIが言っているからと鵜呑みにすることだけでなく、権威の
 
 <br>
 
+Codebergの`cyborg-manifesto-renaissance`で公開出来る範囲の[対話学習](https://codeberg.org/trgr/cyborg-manifesto-renaissance/src/branch/main/20250822.md
+)を公開しています。
+
+<br>
+
 # なぜ母語なの？
 
 哲学や論理学を扱うから、まず母語で制作しました。
