@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>疑似ロールズのベール：権威再配線ツール（Plus, Patched）</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans JP","Hiragino Kaku Gothic ProN","Meiryo",sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;color:#333;padding:20px}
+    .container{max-width:1200px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.1);overflow:hidden}
+    header{background:linear-gradient(135deg,#2c3e50,#34495e);color:#fff;padding:28px}
+    header h1{font-weight:300;font-size:24px;margin-bottom:8px}
+    header p{opacity:.9}
+    .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .btn{background:#3498db;color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;transition:.2s;font-size:14px}
+    .btn:hover{filter:brightness(.9);transform:translateY(-1px)}
+    .btn-secondary{background:#95a5a6}
+    .btn-success{background:#27ae60}
+    .btn-danger{background:#e74c3c}
+    .content{padding:24px}
+    .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .card{border:1.5px solid #ecf0f1;border-radius:12px;padding:16px;background:#fafbfc}
+    .card h3{font-size:16px;margin-bottom:8px}
+    label{display:block;margin-bottom:6px;font-weight:600}
+    input,textarea,select{width:100%;border:2px solid #ecf0f1;border-radius:10px;padding:10px;font-size:14px}
+    textarea{min-height:96px;resize:vertical}
+    details{border:1.5px solid #ecf0f1;border-radius:12px;background:#fff;margin:8px 0;padding:8px 12px}
+    details>summary{cursor:pointer;font-weight:700;padding:6px 4px;list-style:none}
+    .pill{display:inline-block;background:#eef5ff;border:1px solid #cfe0ff;color:#356ac3;border-radius:999px;padding:2px 10px;font-size:12px;margin-right:6px}
+    .progress{height:8px;background:#ecf0f1;border-radius:10px;overflow:hidden}
+    .progress>div{height:8px;background:linear-gradient(90deg,#27ae60,#2ecc71);width:0%}
+    .tree{--line:#e1e8f0;--node:#2d3748}
+    .tree ul{padding-left:18px;border-left:2px solid var(--line);margin-left:10px}
+    .tree li{margin:8px 0;position:relative}
+    .tree li::before{content:"";position:absolute;left:-18px;top:10px;width:18px;height:2px;background:var(--line)}
+    .tree .node{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #e9eef5;border-radius:10px;background:#f8fafc}
+    .badge{font-size:11px;background:#edf2ff;border:1px solid #c9d8ff;color:#2f5bd2;border-radius:8px;padding:2px 6px}
+    .muted{opacity:.75}
+    .warning{background:#fff3cd;border:1px solid #ffeaa7;border-radius:10px;padding:12px;margin-top:12px}
+    .success{background:#d1ecf1;border:1px solid #bee5eb;border-radius:10px;padding:12px;margin-top:12px}
+    .steps{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .step-btn{background:#f0f4f8;border:1.5px solid #e2e8f0;color:#334155;border-radius:999px;padding:8px 12px;cursor:pointer}
+    .step-btn.active{background:#e6f4ff;border-color:#b7dbff;color:#0b5ed7}
+    .hidden{display:none}
+    .footer-note{font-size:12px;color:#555;margin-top:8px}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>疑似ロールズのベール：権威再配線ツール（Plus, Patched）</h1>
+      <p>中身で評価 → 権威は探索手がかり。3層木構造＋自動保存＋MD/JSON入出力。</p>
+      <div class="toolbar">
+        <button class="btn" id="btnTree">🌳 木構造ビュー</button>
+        <button class="btn" id="btnForm">✍️ 評価フォーム</button>
+        <button class="btn-secondary btn" id="btnToggleVeil">🎭 権威情報を隠す</button>
+        <button class="btn-success btn" id="btnExportMD">⬇️ Markdown</button>
+        <button class="btn-success btn" id="btnExportJSON">⬇️ JSON</button>
+        <button class="btn-success btn" id="btnImport">⬆️ Import JSON</button>
+        <input type="file" id="btnImportFile" accept="application/json" style="display:none">
+        <button class="btn-secondary btn" id="btnClear">🧹 リセット</button>
+      </div>
+    </header>
+    <div class="content">
+
+      <section id="treeView">
+        <div class="card">
+          <h3>3層チャート（木構造）</h3>
+          <div class="tree" id="treeRoot">
+            <ul>
+              <li>
+                <div class="node"><span class="badge">層1</span><strong>原則層</strong><span class="muted">（設計理念）</span></div>
+                <ul>
+                  <li><div class="node">P1: 疑似ロールズのベール <span class="pill">Authority-blind first</span></div></li>
+                  <li><div class="node">P2: 権威＝探索の手がかり（盲信しない）</div></li>
+                  <li><div class="node">P3: 次元混ぜるな（事実/倫理/認識/形而上）</div></li>
+                  <li><div class="node">P4: 可能/実現可能/現実の三分</div></li>
+                  <li><div class="node">P5: 作動定義の明示と差分ログ</div></li>
+                </ul>
+              </li>
+              <li>
+                <div class="node"><span class="badge">層2</span><strong>検証層</strong><span class="muted">（誤答→是正手順）</span></div>
+                <ul>
+                  <li>
+                    <div class="node">A. 引用と理解</div>
+                    <ul>
+                      <li><div class="node">A1: 受け売り → 一次出典→要約→自分の語彙</div></li>
+                      <li><div class="node">A2: カテゴリー錯誤 → 型判定（実体/性質/関係/ルール）</div></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <div class="node">B. 論証の骨組み</div>
+                    <ul>
+                      <li><div class="node">B1: 手段の目的化 → 行為的含意を必須化</div></li>
+                      <li><div class="node">B2: 定義すり替え → 定義カード固定＆差分</div></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <div class="node">C. 可能世界の濫用</div>
+                    <ul>
+                      <li><div class="node">C1: 「論理的可能」万能視 → 三段階評価</div></li>
+                      <li><div class="node">C2: 倫理的爆弾の無害化 → 当事者影響表</div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div class="node"><span class="badge">層3</span><strong>運用層</strong><span class="muted">（手順とテンプレ）</span></div>
+                <ul>
+                  <li><div class="node">S1: 覆面化 → S2: 一次評価 → S3: 対抗案併走 → S4: 再開示 → S5: 最終チェック</div></li>
+                  <li><div class="node">カード出力（7行テンプレ）/ ログ化 / エクスポート</div></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <p class="footer-note">※ フォーム入力は自動保存。再読込で前回のレポートを再描画します。</p>
+        </div>
+      </section>
+
+      <section id="formView" class="hidden">
+        <div class="steps">
+          <button class="step-btn" data-step="1">1 覆面化</button>
+          <button class="step-btn" data-step="2">2 一次評価</button>
+          <button class="step-btn" data-step="3">3 対抗案</button>
+          <button class="step-btn" data-step="4">4 再開示</button>
+          <button class="step-btn" data-step="5">5 最終チェック</button>
+        </div>
+
+        <div class="card step" id="step1">
+          <h3>ステップ1: 疑似ロールズのベール（覆面化）</h3>
+          <div class="grid">
+            <div>
+              <label for="claimInput">検証したい主張・アイデア</label>
+              <textarea id="claimInput" placeholder="検証したい主張やアイデア"></textarea>
+            </div>
+            <div>
+              <div class="pill">権威情報（隠す/表示は上部ボタン）</div>
+              <label for="author">著者・提唱者</label>
+              <input id="author" placeholder="著者名や提唱者">
+              <label for="institution">所属・機関</label>
+              <input id="institution" placeholder="大学、企業、組織など">
+              <label for="theory">理論名・学派</label>
+              <input id="theory" placeholder="有名理論名や学派">
+            </div>
+          </div>
+        </div>
+
+        <div class="card step hidden" id="step2">
+          <h3>ステップ2: 一次評価（中身だけで）</h3>
+          <div class="grid">
+            <div>
+              <label for="claimLine">Claim（1行要約）</label>
+              <input id="claimLine" placeholder="主張を1行で">
+              <label for="grounds">Grounds（根拠・データ・引用）</label>
+              <textarea id="grounds" placeholder="根拠、データ、引用のリンク化"></textarea>
+              <label for="limits">Limits（適用条件・反例）</label>
+              <textarea id="limits" placeholder="適用条件、反例、限界"></textarea>
+            </div>
+            <div>
+              <label for="layer">Layer（カテゴリー）</label>
+              <select id="layer">
+                <option value="">選択してください</option>
+                <option value="fact">事実</option>
+                <option value="ethics">倫理</option>
+                <option value="epistemology">認識論</option>
+                <option value="metaphysics">形而上学</option>
+              </select>
+              <label for="feasible">Feasible?（実現可能性の障害）</label>
+              <textarea id="feasible" placeholder="技術的・制度的・データ的な実現可能性"></textarea>
+              <label for="reality">Reality check（現実データでの検証）</label>
+              <textarea id="reality" placeholder="現実データでの検証ステータス"></textarea>
+            </div>
+            <div>
+              <h3>3段階評価</h3>
+              <div class="grid">
+                <div class="card">
+                  <label for="logicalPossible">論理的可能？</label>
+                  <select id="logicalPossible"><option value=""></option><option>はい</option><option>いいえ</option><option>不明</option></select>
+                  <textarea id="logicalReason" placeholder="理由"></textarea>
+                </div>
+                <div class="card">
+                  <label for="practicalFeasible">実現可能？</label>
+                  <select id="practicalFeasible"><option value=""></option><option>はい</option><option>いいえ</option><option>部分的</option></select>
+                  <textarea id="feasibleReason" placeholder="障害や条件"></textarea>
+                </div>
+                <div class="card">
+                  <label for="realityData">現実データ？</label>
+                  <select id="realityData"><option value=""></option><option>確認済み</option><option>部分的</option><option>未検証</option><option>矛盾</option></select>
+                  <textarea id="realityReason" placeholder="データの詳細"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card step hidden" id="step3">
+          <h3>ステップ3: 対抗案併走</h3>
+          <label for="altClaim">代替仮説・対抗案</label>
+          <textarea id="altClaim"></textarea>
+          <label for="altGrounds">代替案の根拠</label>
+          <textarea id="altGrounds"></textarea>
+          <label for="comparison">比較評価</label>
+          <textarea id="comparison"></textarea>
+        </div>
+
+        <div class="card step hidden" id="step4">
+          <h3>ステップ4: 権威情報の再開示</h3>
+          <div class="warning">⚠️ 採否は変えず、信頼度の微調整のみ。ここでは <strong>Step1で隠していた権威情報</strong> をプレビューし、評価に織り込みます。</div>
+
+          <!-- 再開示プレビュー -->
+          <div class="card" id="authPreviewCard">
+            <h3>🎭 権威情報プレビュー</h3>
+            <p><strong>著者/提唱者:</strong> <span id="pvAuthor">—</span></p>
+            <p><strong>所属・機関:</strong> <span id="pvInstitution">—</span></p>
+            <p><strong>理論名・学派:</strong> <span id="pvTheory">—</span></p>
+
+            <div class="grid" style="margin-top:8px">
+              <div class="card">
+                <label for="authPeer">査読/第三者検証</label>
+                <select id="authPeer"><option value=""></option><option>強い</option><option>普通</option><option>弱い/不明</option></select>
+              </div>
+              <div class="card">
+                <label for="authDomain">専門適合度</label>
+                <select id="authDomain"><option value=""></option><option>高い</option><option>中</option><option>低い</option></select>
+              </div>
+              <div class="card">
+                <label for="authCoI">利益相反</label>
+                <select id="authCoI"><option value=""></option><option>なし</option><option>可能性</option><option>顕著</option></select>
+              </div>
+              <div class="card">
+                <label for="authRecency">鮮度（発表時期）</label>
+                <select id="authRecency"><option value=""></option><option>新しい</option><option>普通</option><option>古い/不明</option></select>
+              </div>
+            </div>
+            <div class="toolbar" style="margin-top:8px">
+              <button class="btn" id="btnAutoAdjust">評価に反映</button>
+            </div>
+            <p class="muted">※ 権威は「盲信」ではなく「探索の手がかり」。この評価は最終採否ではなく、重み付けの微調整です。</p>
+          </div>
+
+          <!-- 既存の手動調整欄 -->
+          <label for="adjust">調整</label>
+          <select id="adjust"><option value="none">調整なし</option><option value="slight-up">わずかにアップ</option><option value="slight-down">わずかにダウン</option></select>
+          <label for="adjustReason">調整理由</label>
+          <textarea id="adjustReason"></textarea>
+        </div>
+          <label for="adjust">調整</label>
+          <select id="adjust"><option value="none">調整なし</option><option value="slight-up">わずかにアップ</option><option value="slight-down">わずかにダウン</option></select>
+          <label for="adjustReason">調整理由</label>
+          <textarea id="adjustReason"></textarea>
+        </div>
+
+        <div class="card step hidden" id="step5">
+          <h3>ステップ5: 最終チェック</h3>
+          <div class="progress"><div id="progressFill"></div></div>
+          <div style="margin:8px 0"><span id="progressText">0/8 完了</span></div>
+          <ul id="checklist">
+            <li><label><input type="checkbox"> どの層の主張？（事実/倫理/認識論/形而上）</label></li>
+            <li><label><input type="checkbox"> 定義カードは明示？途中で変化なし？</label></li>
+            <li><label><input type="checkbox"> 覆面でも採用？（権威を剥いでも立つ）</label></li>
+            <li><label><input type="checkbox"> 反証候補を自分で提示した？</label></li>
+            <li><label><input type="checkbox"> 可能/実現可能/現実の3区別をした？</label></li>
+            <li><label><input type="checkbox"> 当事者影響（不可逆性・再発性）を棚卸し？</label></li>
+            <li><label><input type="checkbox"> カテゴリー型は合っている？</label></li>
+            <li><label><input type="checkbox"> 引用は一次出典→要約→自分の語彙？</label></li>
+          </ul>
+          <div class="toolbar" style="margin-top:8px">
+            <button class="btn" id="btnGenerate">最終レポート</button>
+            <button class="btn-secondary btn" id="btnCopy">レポートをコピー</button>
+          </div>
+          <div id="reportBox" class="card hidden"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const $ = (q)=>document.querySelector(q);
+    const $$ = (q)=>Array.from(document.querySelectorAll(q));
+    const stateKey = "authorityRewiring_plus_v1";
+    let veilHidden = true;
+
+    const state = new Proxy({
+      claimInput:"", author:"", institution:"", theory:"",
+      claimLine:"", grounds:"", limits:"", layer:"", feasible:"", reality:"",
+      logicalPossible:"", logicalReason:"",
+      practicalFeasible:"", feasibleReason:"",
+      realityData:"", realityReason:"",
+      altClaim:"", altGrounds:"", comparison:"",
+      adjust:"none", adjustReason:"",
+      authPeer:"", authDomain:"", authCoI:"", authRecency:"",
+      checks:Array(8).fill(false)
+    },{
+      set(obj, key, val){ obj[key]=val; save(); return true; }
+    });
+
+    function save(){
+      const snapshot = {}; Object.keys(state).forEach(k=> snapshot[k] = state[k]);
+      localStorage.setItem(stateKey, JSON.stringify(snapshot));
+    }
+    function load(){
+      const raw = localStorage.getItem(stateKey);
+      if(!raw) return;
+      try{
+        const s = JSON.parse(raw);
+        Object.keys(s).forEach(k=> state[k] = s[k]);
+        for(const [k,v] of Object.entries(s)){
+          const el = document.getElementById(k);
+          if(!el) continue;
+          if(el.type==="checkbox") el.checked = !!v; else el.value = v;
+        }
+        if (Array.isArray(s.checks)) {
+          $$("#checklist input[type=checkbox]").forEach((cb,i)=> cb.checked = !!s.checks[i]);
+        }
+        updateProgress();
+        if (s.claimLine || s.grounds || s.limits || s.reality || s.feasible) {
+          renderReport();
+        }
+      }catch(e){console.warn(e)}
+    }
+
+    function gather(){
+      return {
+        claim: $("#claimInput").value.trim(),
+        claimLine: $("#claimLine").value.trim(),
+        grounds: $("#grounds").value.trim(),
+        limits: $("#limits").value.trim(),
+        layer: $("#layer").value,
+        feasible: $("#feasible").value.trim(),
+        reality: $("#reality").value.trim(),
+        alternative: $("#altClaim").value.trim(),
+        comparison: $("#comparison").value.trim(),
+        adjustment: $("#adjust").value
+      };
+    }
+
+    function toMarkdown(){
+      const d = gather();
+      return `# 最終評価レポート
+- 生成時刻: ${new Date().toLocaleString()}
+
+## 7行テンプレート
+- **Claim**: ${d.claimLine||"-"}
+- **Grounds**: ${d.grounds||"-"}
+- **Limits**: ${d.limits||"-"}
+- **Layer**: ${d.layer||"-"}
+- **Feasible**: ${d.feasible||"-"}
+- **Reality check**: ${d.reality||"-"}
+
+## 対抗案評価
+- **代替仮説**: ${d.alternative||"-"}
+- **比較評価**: ${d.comparison||"-"}
+
+## 権威調整
+- **調整**: ${d.adjustment||"none"}
+
+`;
+    }
+
+    function download(filename, content, type="text/plain"){
+      const blob = new Blob([content], {type});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = filename; a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function showTree(){ $("#treeView").classList.remove("hidden"); $("#formView").classList.add("hidden"); }
+    function showForm(){ $("#formView").classList.remove("hidden"); $("#treeView").classList.add("hidden"); }
+    $("#btnTree").addEventListener("click", showTree);
+    $("#btnForm").addEventListener("click", showForm);
+
+    const steps = [$("#step1"),$("#step2"),$("#step3"),$("#step4"),$("#step5")];
+    const stepBtns = $$(".step-btn");
+    function activateStep(i){
+      steps.forEach((s,idx)=>s.classList.toggle("hidden", idx!==i-1));
+      stepBtns.forEach((b,idx)=>b.classList.toggle("active", idx===i-1));
+      steps[i-1].scrollIntoView({behavior:"smooth",block:"start"});
+    }
+    stepBtns.forEach(btn=>btn.addEventListener("click",()=>activateStep(+btn.dataset.step)));
+    activateStep(1);
+
+    function toggleVeil(){
+      veilHidden = !veilHidden;
+      ["author","institution","theory"].forEach(id=>{
+        const el = $("#"+id);
+        el.type = veilHidden ? "password" : "text";
+      });
+      $("#btnToggleVeil").textContent = veilHidden ? "🎭 権威情報を隠す" : "🎭 権威情報を表示";
+    }
+    $("#btnToggleVeil").addEventListener("click", toggleVeil);
+    toggleVeil();
+
+    const bindIds = ["claimInput","author","institution","theory","claimLine","grounds","limits","layer","feasible","reality","logicalPossible","logicalReason","practicalFeasible","feasibleReason","realityData","realityReason","altClaim","altGrounds","comparison","adjust","adjustReason","authPeer","authDomain","authCoI","authRecency"];
+    bindIds.forEach(id=>{
+      const el = document.getElementById(id); if(!el) return;
+      el.addEventListener("input", ()=>{ state[id] = (el.type==="checkbox") ? el.checked : el.value; });
+      el.addEventListener("change", ()=>{ state[id] = (el.type==="checkbox") ? el.checked : el.value; });
+    });
+
+    // --- 再開示プレビューと自動調整 ---
+    function updateAuthorityPreview(){
+      const a = document.getElementById("pvAuthor"); if(a) a.textContent = document.getElementById("author").value || "—";
+      const i = document.getElementById("pvInstitution"); if(i) i.textContent = document.getElementById("institution").value || "—";
+      const t = document.getElementById("pvTheory"); if(t) t.textContent = document.getElementById("theory").value || "—";
+    }
+    ["author","institution","theory"].forEach(id=>{ const el = document.getElementById(id); if(el){ el.addEventListener("input", updateAuthorityPreview); }});
+    const autoBtn = document.getElementById("btnAutoAdjust");
+    if(autoBtn){ autoBtn.addEventListener("click", ()=>{
+      const map = {"強い":1,"高い":1,"なし":1,"新しい":1,"普通":0,"中":0,"可能性":0,"弱い/不明":-1,"低い":-1,"顕著":-1,"古い/不明":-1};
+      const s = v=> (map[v] ?? 0);
+      const total = s(state.authPeer)+s(state.authDomain)+s(state.authCoI)+s(state.authRecency);
+      let adj = "none"; if(total>=2) adj="slight-up"; else if(total<=-2) adj="slight-down";
+      const adjSel = document.getElementById("adjust"); if(adjSel){ adjSel.value = adj; }
+      state.adjust = adj;
+      const parts=[]; if(state.authPeer) parts.push(`査読/検証:${state.authPeer}`); if(state.authDomain) parts.push(`専門適合度:${state.authDomain}`); if(state.authCoI) parts.push(`利益相反:${state.authCoI}`); if(state.authRecency) parts.push(`鮮度:${state.authRecency}`);
+      const reasonText = `自動判定(${total}): `+parts.join(" / ");
+      const ar = document.getElementById("adjustReason"); if(ar){ ar.value = reasonText; }
+      state.adjustReason = reasonText;
+      alert("再開示の評価を反映しました（調整: "+adj+"）");
+    }); }
+
+    function updateProgress(){
+
+      const cbs = $$("#checklist input[type=checkbox]");
+      const done = cbs.filter(cb=>cb.checked).length;
+      $("#progressFill").style.width = (done/cbs.length*100)+"%";
+      $("#progressText").textContent = `${done}/${cbs.length} 完了`;
+      state.checks = cbs.map(cb=>cb.checked);
+    }
+    $$("#checklist input[type=checkbox]").forEach(cb=>cb.addEventListener("change", updateProgress));
+
+    function renderReport(){
+      const d = gather();
+      const cbs = $$("#checklist input[type=checkbox]");
+      const done = cbs.filter(cb=>cb.checked).length;
+      const rate = Math.round(done/cbs.length*100);
+      const status = (rate===100) ? `<div class="success">✅ 完全評価完了</div>` : `<div class="warning">⚠️ 部分評価（${rate}%）</div>`;
+
+      const html = `
+        ${status}
+        <div class="card">
+          <h3>📋 7行テンプレート結果</h3>
+          <p><strong>Claim:</strong> ${d.claimLine||"未記入"}</p>
+          <p><strong>Grounds:</strong> ${d.grounds||"未記入"}</p>
+          <p><strong>Limits:</strong> ${d.limits||"未記入"}</p>
+          <p><strong>Layer:</strong> ${d.layer||"未選択"}</p>
+          <p><strong>Feasible:</strong> ${d.feasible||"未記入"}</p>
+          <p><strong>Reality check:</strong> ${d.reality||"未記入"}</p>
+        </div>
+        <div class="card">
+          <h3>🔄 対抗案評価</h3>
+          <p><strong>代替仮説:</strong> ${d.alternative||"未記入"}</p>
+          <p><strong>比較評価:</strong> ${d.comparison||"未記入"}</p>
+        </div>
+        <div class="card">
+          <h3>⚖️ 権威調整</h3>
+          <p><strong>調整:</strong> ${d.adjustment||"調整なし"}</p>
+          <p class="muted">※ 権威は探索の手がかりとしてのみ使用</p>
+        </div>
+      `;
+      const box = $("#reportBox");
+      box.innerHTML = html;
+      box.classList.remove("hidden");
+    }
+    $("#btnGenerate").addEventListener("click", renderReport);
+
+    $("#btnCopy").addEventListener("click", ()=>{
+      const md = toMarkdown();
+      navigator.clipboard.writeText(md).then(()=>{ alert("Markdownをコピーしました"); });
+    });
+
+    $("#btnExportMD").addEventListener("click", ()=> download("authority_report.md", toMarkdown(), "text/markdown"));
+    $("#btnExportJSON").addEventListener("click", ()=>{
+      const payload = {}; Object.keys(state).forEach(k=> payload[k] = state[k]);
+      download("authority_report.json", JSON.stringify(payload, null, 2), "application/json");
+    });
+
+    $("#btnImport").addEventListener("click", ()=> $("#btnImportFile").click());
+    $("#btnImportFile").addEventListener("change", e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const r = new FileReader();
+      r.onload = ()=>{
+        try{ JSON.parse(r.result); localStorage.setItem(stateKey, r.result); location.reload(); }
+        catch(err){ alert("JSONの形式が不正です。"); }
+      };
+      r.readAsText(f, "utf-8");
+    });
+
+    $("#btnClear").addEventListener("click", ()=>{
+      if(!confirm("入力内容をすべて消去します。よろしいですか？")) return;
+      localStorage.removeItem(stateKey);
+      location.reload();
+    });
+
+    window.addEventListener("DOMContentLoaded", ()=>{ load(); updateAuthorityPreview(); showTree(); });
+  </script>
+</body>
+</html>
