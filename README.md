@@ -9,8 +9,8 @@ A prototype tool for re-evaluating knowledge claims under a “pseudo veil of ig
 <br>
 
 # クイックスタート
-1. [ZIPファイル](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/Authority-Rewiring-Tool-Plus.zip)をダウンロードする
-2. ZIPファイルをあなたのパソコンなどで解凍する
+1. [ZIPファイル](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/Authority-Rewiring-Tool-Plus.zip)か[HTMLファイル](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/Authority-Rewiring-Tool-Plus.html)をダウンロードする
+2. ZIPファイルをあなたのパソコンなどで解凍する（HTMLファイルは2をスキップし3へ進む）
 3. HTMLファイルが入っているのでダブルクリックしてブラウザで使います
 4. [JSON](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.json)をインポートしたり
 5. [.md](https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/authority_report.md
@@ -18,16 +18,23 @@ A prototype tool for re-evaluating knowledge claims under a “pseudo veil of ig
 
 <br>
 
-# ZIPファイルのSHA-256（Secure Hash Algorithm 256-bit）
-81ac416952dd75156ec08534f3603e8b1060bddd2dea11e5a25df6e15fb87c53
+# SHA-256（Secure Hash Algorithm 256-bit）
 
-（改変防止・検証用）
+| SHA-256 | ファイル名 |
+| :---: | :---: |
+| 81ac416952dd75156ec08534f3603e8b1060bddd2dea11e5a25df6e15fb87c53 | Authority-Rewiring-Tool-Plus.zip |
+| 3eef87d04b65c9e160c4a8041485777d3db72f90840c9bb8ea30951d5a6edc51 | Authority-Rewiring-Tool-Plus.html |
+
+（公開時とから改変されていないことの検証用）
 
 <br>
 
 # デモ
 
-https://youtu.be/lt8_8jVDqss
+**YouTube:** https://youtu.be/lt8_8jVDqss
+
+**GitHub Pages:** https://trgr-karasutoragara.github.io/rolls-veil-2u/Authority-Rewiring-Tool-Plus.html
+
 
 <br>
 
@@ -38,6 +45,25 @@ https://youtu.be/lt8_8jVDqss
 | <img src="https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/img/001.png" width="400"> | <img src="https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/img/002.png" width="400"> |
 | <img src="https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/img/003.png" width="400"> | <img src="https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/img/004.png" width="400"> |
 | <img src="https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/img/005.png" width="400"> | <img src="https://github.com/trgr-karasutoragara/rolls-veil-2u/blob/main/img/006.png" width="400"> |
+
+<br>
+
+# 技術仕様・セキュリティについて
+
+## 完全クライアントサイド動作
+- このツールは100% JavaScriptで動作します
+- サーバーとの通信は一切行いません
+- データはブラウザのlocalStorageにのみ保存されます
+
+## GitHub Pagesでの公開について
+- GitHub Pagesは静的ファイルのホスティングサービスです
+- サーバーサイド処理は技術的に不可能な環境です
+- あなたのデータが外部に送信されることは絶対にありません
+
+## デモ vs 本格利用
+- **オンライン版**: デモ・お試し用として提供
+- **ローカル版（推奨）**: ZIP・HTMLファイルをダウンロードしてお使いください
+- 重要な分析や継続的な利用にはローカル版を推奨します
 
 <br>
 
