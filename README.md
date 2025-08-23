@@ -25,7 +25,7 @@ A prototype tool for re-evaluating knowledge claims under a “pseudo veil of ig
 | 81ac416952dd75156ec08534f3603e8b1060bddd2dea11e5a25df6e15fb87c53 | Authority-Rewiring-Tool-Plus.zip |
 | 3eef87d04b65c9e160c4a8041485777d3db72f90840c9bb8ea30951d5a6edc51 | Authority-Rewiring-Tool-Plus.html |
 
-（公開時とから改変されていないことの検証用）
+（公開時から改変されていないことの検証用）
 
 <br>
 
