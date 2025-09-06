@@ -29,6 +29,11 @@ A prototype tool for re-evaluating knowledge claims under a “pseudo veil of ig
 
 <br>
 
+# Academia.edu
+**AI Ethics Implementation: Developing Tools from Incidents to Save Researchers 5 Minutes** https://www.academia.edu/143571893/AI_Ethics_Implementation_Developing_Tools_from_Incidents_to_Save_Researchers_5_Minutes
+
+<br>
+
 # デモ
 
 **YouTube:** https://youtu.be/lt8_8jVDqss
